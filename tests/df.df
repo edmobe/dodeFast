@@ -1,0 +1,6 @@
+DCL A;
+DCL B DEFAULT 100;
+
+INC(A, B);
+
+DEF(A, B)

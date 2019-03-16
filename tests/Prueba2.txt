@@ -1,0 +1,7 @@
+Hola mundo.
+
+Prueba con otros tipos de archivos.
+
+Prueba con atajos de teclado.
+
+Resultado de Save As.
