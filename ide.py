@@ -1,16 +1,14 @@
-#Referencias
-#https://www.youtube.com/watch?v=7PGFin30c4o&t=42s
-#https://stackoverflow.com/questions/39614027/list-available-font-families-in-tkinter
-#https://www.youtube.com/watch?v=-GLaHb-s4kA
-#https://stackoverflow.com/questions/11073553/open-function-python-default-directory
-#https://pythonspot.com/tk-file-dialogs/
-#https://www.geeksforgeeks.org/python-string-split/
-#https://www.youtube.com/watch?v=772XCgm-Mr4&list=PLamqrZ7b2mV5IM9_xGkNT2CPGP9wWKN3c&index=4&t=0s
+# If you want to:
+# - Implement the compiler: go to IDE Class -> run compiler method -> try. When you open a file, the IDE Class attribute "filename" gets the file adress. 
+# - Understand this code: go to the references.
+# - Modify this: ask for Eduardo please :'v
+
 
 
 import tkinter as tk
 from tkinter import filedialog
 import os
+
 
 
 class MenuBar:
@@ -29,7 +27,11 @@ class MenuBar:
         file_dropdown.add_separator()
         file_dropdown.add_command(label="Exit", command=parent.master.destroy)
 
+        run_dropdown = tk.Menu(menubar, font=font_specs, tearoff=0)
+        run_dropdown.add_command(label="Run", accelerator="F5", command=parent.run_compiler)
+
         menubar.add_cascade(label="File", menu=file_dropdown)
+        menubar.add_cascade(label="Run", menu=run_dropdown)
 
 
 
@@ -111,7 +113,7 @@ class IDE:
                     f.write(textarea_content)
                 self.statusbar.update_status(True)
             except Exception as e:
-                print(e)
+                print(e) #THIS SHOULD BE DISPLAYED AS AN ERROR IN THE IDE
         else:
             self.save_as()
 
@@ -132,13 +134,23 @@ class IDE:
             self.set_window_title(self.filename)
             self.statusbar.update_status(True)
         except Exception as e:
-            print(e)
-    
+            print(e) #THIS SHOULD BE DISPLAYED AS AN ERROR IN THE IDE
+
+    def run_compiler(self, *args):
+        if self.filename:
+            try:
+                print("This will compile the file: " + self.filename)
+            except Exception as e:
+                print(e) #THIS SHOULD BE DISPLAYED AS AN ERROR IN THE IDE
+        else:
+            print("Please load a file to run.") #THIS SHOULD BE DISPLAYED AS AN ERROR IN THE IDE
+        
     def bind_shortcuts(self):
         self.textarea.bind('<Control-n>', self.new_file)
         self.textarea.bind('<Control-o>', self.open_file)
         self.textarea.bind('<Control-s>', self.save)
         self.textarea.bind('<Control-S>', self.save_as)
+        self.textarea.bind('<F5>', self.run_compiler)
         self.textarea.bind('<Key>', self.statusbar.update_status)
 
 
@@ -147,3 +159,14 @@ if __name__ == "__main__":
     master = tk.Tk()
     ide = IDE(master)
     master.mainloop()
+
+
+
+#References
+#https://www.youtube.com/watch?v=7PGFin30c4o&t=42s
+#https://stackoverflow.com/questions/39614027/list-available-font-families-in-tkinter
+#https://www.youtube.com/watch?v=-GLaHb-s4kA
+#https://stackoverflow.com/questions/11073553/open-function-python-default-directory
+#https://pythonspot.com/tk-file-dialogs/
+#https://www.geeksforgeeks.org/python-string-split/
+#https://www.youtube.com/watch?v=772XCgm-Mr4&list=PLamqrZ7b2mV5IM9_xGkNT2CPGP9wWKN3c&index=4&t=0s
