@@ -5,6 +5,7 @@
 
 
 
+from compiler import Compiler
 import tkinter as tk
 from tkinter import filedialog
 import os
@@ -48,7 +49,7 @@ class StatusBar:
         self.status = tk.StringVar()
         self.status.set("DodeFast IDE - No errors.")
 
-        self.message = tk.Message(parent.compiler_frame, textvariable=self.status, fg="black", bg="lightgrey", anchor='sw', font=font_specs)
+        self.message = tk.Message(parent.compiler_frame, textvariable=self.status, fg="black", bg="lightgrey", anchor='sw', font=font_specs, aspect=2000)
 
         self.message.pack(side=tk.BOTTOM, fill=tk.BOTH, expand=True)
     
@@ -69,6 +70,8 @@ class IDE:
         master.geometry("1200x800")
 
         font_specs = ("Consolas", 18)
+
+        self.compiler = Compiler()
 
         self.master = master
         self.filename = None
@@ -125,7 +128,7 @@ class IDE:
                     f.write(textarea_content)
                 self.statusbar.update_status(True)
             except Exception as e:
-                print(e) #THIS SHOULD BE DISPLAYED AS AN ERROR IN THE IDE
+                self.statusbar.update_status("DodeFast IDE - ", e) #THIS SHOULD BE DISPLAYED AS AN ERROR IN THE IDE
         else:
             self.save_as()
 
@@ -146,16 +149,16 @@ class IDE:
             self.set_window_title(self.filename)
             self.statusbar.update_status(True)
         except Exception as e:
-            print(e) #THIS SHOULD BE DISPLAYED AS AN ERROR IN THE IDE
+            self.statusbar.update_status("DodeFast IDE - ", e) #THIS SHOULD BE DISPLAYED AS AN ERROR IN THE IDE
 
     def run_compiler(self, *args):
         if self.filename:
             try:
-                print("This will compile the file: " + self.filename)
+                self.statusbar.update_status("DodeFast Compiler - " + self.compiler.compile(self.filename))
             except Exception as e:
-                print(e) #THIS SHOULD BE DISPLAYED AS AN ERROR IN THE IDE
+                self.statusbar.update_status("DodeFast IDE - ", e) #THIS SHOULD BE DISPLAYED AS AN ERROR IN THE IDE
         else:
-            print("Please load a file to run.") #THIS SHOULD BE DISPLAYED AS AN ERROR IN THE IDE
+            self.statusbar.update_status("DodeFast IDE - Please load a file to run.") #THIS SHOULD BE DISPLAYED AS AN ERROR IN THE IDE
         
     def bind_shortcuts(self):
         self.textarea.bind('<Control-n>', self.new_file)
@@ -166,7 +169,7 @@ class IDE:
         self.textarea.bind('<Key>', self.statusbar.update_status)
 
     def test_print(self, *args):
-        self.statusbar.update_status("Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.")
+        self.statusbar.update_status("DodeFast IDE - Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.")
 
 
 
