@@ -30,8 +30,12 @@ class MenuBar:
         run_dropdown = tk.Menu(menubar, font=font_specs, tearoff=0)
         run_dropdown.add_command(label="Run", accelerator="F5", command=parent.run_compiler)
 
+        test_dropdown = tk.Menu(menubar, font=font_specs, tearoff=0)
+        test_dropdown.add_command(label="Test print", command=parent.test_print)
+
         menubar.add_cascade(label="File", menu=file_dropdown)
         menubar.add_cascade(label="Run", menu=run_dropdown)
+        menubar.add_cascade(label="Test", menu=test_dropdown)
 
 
 
@@ -44,13 +48,15 @@ class StatusBar:
         self.status = tk.StringVar()
         self.status.set("DodeFast IDE - No errors.")
 
-        label = tk.Label(parent.textarea, textvariable=self.status, fg="black", bg="lightgrey", anchor='sw', font=font_specs)
+        self.message = tk.Message(parent.compiler_frame, textvariable=self.status, fg="black", bg="lightgrey", anchor='sw', font=font_specs)
 
-        label.pack(side=tk.BOTTOM, fill=tk.BOTH)
+        self.message.pack(side=tk.BOTTOM, fill=tk.BOTH, expand=True)
     
     def update_status(self, *args):
         if isinstance(args[0], bool):
             self.status.set("Your file has been saved.")
+        elif isinstance(args[0], str):
+            self.status.set(args[0])
         else:
             self.status.set("DodeFast IDE - No errors.")
 
@@ -60,17 +66,23 @@ class IDE:
 
     def __init__(self, master):
         master.title("Untitled - DodeFast IDE")
-        master.geometry("1200x700")
+        master.geometry("1200x800")
 
         font_specs = ("Consolas", 18)
 
         self.master = master
         self.filename = None
 
-        self.textarea = tk.Text(master, font=font_specs)
-        self.scroll = tk.Scrollbar(master, command=self.textarea.yview)
+        self.editor_frame = tk.Frame(master)
+        self.compiler_frame = tk.Frame(master)
+
+        self.textarea = tk.Text(self.editor_frame, font=font_specs)
+        self.scroll = tk.Scrollbar(self.editor_frame, command=self.textarea.yview)
         
         self.textarea.configure(yscrollcommand=self.scroll.set)
+
+        self.editor_frame.pack(fill=tk.X)
+        self.compiler_frame.pack(fill=tk.X)
         
         self.textarea.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
         self.scroll.pack(side=tk.RIGHT, fill=tk.Y)
@@ -153,6 +165,9 @@ class IDE:
         self.textarea.bind('<F5>', self.run_compiler)
         self.textarea.bind('<Key>', self.statusbar.update_status)
 
+    def test_print(self, *args):
+        self.statusbar.update_status("Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.")
+
 
 
 if __name__ == "__main__":
@@ -170,3 +185,6 @@ if __name__ == "__main__":
 #https://pythonspot.com/tk-file-dialogs/
 #https://www.geeksforgeeks.org/python-string-split/
 #https://www.youtube.com/watch?v=772XCgm-Mr4&list=PLamqrZ7b2mV5IM9_xGkNT2CPGP9wWKN3c&index=4&t=0s
+#http://effbot.org/tkinterbook/frame.htm
+#https://www.lipsum.com/
+#https://effbot.org/tkinterbook/pack.htm
